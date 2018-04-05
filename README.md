@@ -1,6 +1,6 @@
 # Rubik Cube Mixing Time
 
-Used to keep track of Rubik Cube Goals, add important things for writeup
+Used to keep track of Rubik. Cube Goals, add important things for writeup
 
 * Metric for measuring randomness of output cube
 * Different algorithm, random axis, non-random 'h', 'w', 'l'
