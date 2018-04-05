@@ -1,10 +1,18 @@
 # Rubik Cube Mixing Time
 
-Used to keep track of Rubik. Cube Goals, add important things for writeup
+Used to keep track of Rubik Cube Goals, add important things for writeup
 
 * Metric for measuring randomness of output cube
 * Different algorithm, random axis, non-random 'h', 'w', 'l'
 * Visualization of randomness over time
+
+## Latex Paper
+
+To turn into pdf, use 
+```shell
+$ pdflatex paper_latex/main.tex
+```
+and will outputa pdf of paper into working directory.
 
 ## Random Walk (Even Chance) movements
 
