@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def generate_faces():
+def generate_faces(rand=None):
     """
     Start.
 
@@ -17,6 +17,11 @@ def generate_faces():
     colors = ['White', 'Green', 'Red', 'Blue', 'Orange', 'Yellow']
     for ind, color in enumerate(colors):
         faces[ind, :, :] = color
+    """
+    if isinstance(rand, int):
+        continue
+        # for iters in range(rand):
+    """
 
     return faces
 
@@ -104,6 +109,8 @@ def find_sovled(number_shuffle, average_amount, overflow_amount):
     ind_list = range(1, n_iter + 1)
     for it_am in range(1, n_iter + 1):
         print(it_am)
+        solve_fin = 0
+        overflow = 0
         for avg in range(averages):
             count = 0
             not_solved = True
@@ -126,7 +133,7 @@ def find_rand(number_shuffle, average_amount, overflow_amount):
     """
     Finding Solved Cube.
 
-    Assume solved cube face is a sufficiently random face, check other random faces in a function
+    Copied right now, adding to make a solid random cube (same example for all of average)
     """
     cube = generate_faces()
     solved = np.copy(cube)
@@ -165,9 +172,9 @@ if __name__ == '__main__':
     # cube = generate_faces()
     # solved = np.copy(cube)
     movement_list = ['h', 'w', 'l']
-    n_iter = 15
+    n_iter = 20
     averages = 1000
-    overflow_amount = 100
+    overflow_amount = 1000
     solve_list, ind_list = find_sovled(n_iter, averages, overflow_amount)
     plt.plot(ind_list, solve_list, 'ko-')
     plt.xticks(ind_list)
