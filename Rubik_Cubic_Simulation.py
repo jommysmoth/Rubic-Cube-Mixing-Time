@@ -85,17 +85,18 @@ def turn_cube_func(faces, turn_type, turn_axis, rotate_amount):
     return faces
 
 
-def randomize_cube(cube, amount_shuffle):
+def randomize_cube(cube, amount_shuffle, movement_list):
     """Randomize Cube x-amount."""
+    size = len(movement_list)
     for x in range(amount_shuffle):
-        m_type = movement_list[np.random.randint(3)]
-        axis = np.random.randint(3)
-        movement_amount = np.random.randint(3)
+        m_type = movement_list[np.random.randint(size)]
+        axis = np.random.randint(size)
+        movement_amount = np.random.randint(size)
         cube = turn_cube_func(cube, m_type, axis, movement_amount)
     return cube
 
 
-def find_sovled(number_shuffle, average_amount, overflow_amount):
+def find_sovled(number_shuffle, average_amount, overflow_amount, movement_list):
     """
     Finding Solved Cube.
 
@@ -106,19 +107,19 @@ def find_sovled(number_shuffle, average_amount, overflow_amount):
     solve_fin = 0
     overflow = 0
     solve_list = []
-    ind_list = range(1, n_iter + 1)
-    for it_am in range(1, n_iter + 1):
+    ind_list = range(1, number_shuffle + 1)
+    for it_am in range(1, number_shuffle + 1):
         print(it_am)
         solve_fin = 0
         overflow = 0
-        for avg in range(averages):
+        for avg in range(average_amount):
             count = 0
             not_solved = True
             cube = generate_faces()
-            cube = randomize_cube(cube, it_am)
+            cube = randomize_cube(cube, it_am, movement_list)
             while not_solved:
                 count += 1
-                cube = randomize_cube(cube, 1)
+                cube = randomize_cube(cube, 1, movement_list)
                 if np.array_equal(cube, solved):
                     not_solved = False
                     solve_fin += 1
@@ -127,59 +128,40 @@ def find_sovled(number_shuffle, average_amount, overflow_amount):
                     overflow += 1
         solve_list.append(solve_fin)
     return solve_list, ind_list
-
-
-def find_rand(number_shuffle, average_amount, overflow_amount):
-    """
-    Finding Solved Cube.
-
-    Copied right now, adding to make a solid random cube (same example for all of average)
-    """
-    cube = generate_faces()
-    solved = np.copy(cube)
-    solve_fin = 0
-    overflow = 0
-    solve_list = []
-    ind_list = range(1, n_iter + 1)
-    for it_am in range(1, n_iter + 1):
-        print(it_am)
-        for avg in range(averages):
-            count = 0
-            not_solved = True
-            cube = generate_faces()
-            # print(cube)
-            for x in range(it_am):
-                m_type = movement_list[np.random.randint(3)]
-                axis = np.random.randint(3)
-                movement_amount = np.random.randint(3)
-                cube = turn_cube_func(cube, m_type, axis, movement_amount)
-            while not_solved:
-                count += 1
-                m_type = movement_list[np.random.randint(3)]
-                axis = np.random.randint(3)
-                cube = turn_cube_func(cube, m_type, axis, movement_amount)
-                if np.array_equal(cube, solved):
-                    not_solved = False
-                    solve_fin += 1
-                elif count > overflow_amount:
-                    not_solved = False
-                    overflow += 1
-        solve_list.append(solve_fin)
-    return solve_list, ind_list
-
 
 if __name__ == '__main__':
     # cube = generate_faces()
     # solved = np.copy(cube)
     movement_list = ['h', 'w', 'l']
+    fig = plt.figure()
+    fig_2d = plt.figure()
+    ax = fig.add_subplot(111)
+    ax_2d = fig_2d.add_subplot(111)
     n_iter = 20
     averages = 1000
-    overflow_amount = 1000
-    solve_list, ind_list = find_sovled(n_iter, averages, overflow_amount)
-    plt.plot(ind_list, solve_list, 'ko-')
-    plt.xticks(ind_list)
-    plt.title('For %i random shufflings of random cube,'
-              ' with %i as overflow amount' % (n_iter, overflow_amount))
-    plt.xlabel('Amount of iterations')
-    plt.ylabel('Amount of times, out of %i, reaches starting state' % averages)
+    overflow_amount = 30
+    average_list = [10, 100]
+    for averages in average_list:
+        solve_list, ind_list = find_sovled(n_iter, averages, overflow_amount, movement_list)
+        solve_list = [x / averages for x in solve_list]
+        solve_list_2d, ind_list_2d = find_sovled(n_iter, averages, overflow_amount, ['h', 'w'])
+        solve_list_2d = [x / averages for x in solve_list_2d]
+        if averages == 10:
+            col = 'go-'
+        if averages == 100:
+            col = 'bo-'
+        ax.plot(ind_list, solve_list, col)
+        ax_2d.plot(ind_list_2d, solve_list_2d, col)
+    ax.set_xticks(ind_list)
+    ax_2d.set_xticks(ind_list_2d)
+    ax.set_title('For %i random shufflings of random cube,'
+                 ' with %i as overflow amount (3d Full Set)' % (n_iter, overflow_amount))
+    ax_2d.set_title('For %i random shufflings of random cube,'
+                    ' with %i as overflow amount (2d Restricted)' % (n_iter, overflow_amount))
+    ax.set_xlabel('Amount of iterations')
+    ax_2d.set_xlabel('Amount of iterations')
+    ax.set_ylabel('Amount of times reaches starting state (Normalized)')
+    ax_2d.set_ylabel('Amount of times reaches starting state (Normalized)')
+    ax.legend(average_list)
+    ax_2d.legend(average_list)
     plt.show()
