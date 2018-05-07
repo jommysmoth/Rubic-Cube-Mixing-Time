@@ -130,8 +130,6 @@ def find_sovled(number_shuffle, average_amount, overflow_amount, movement_list):
     return solve_list, ind_list
 
 if __name__ == '__main__':
-    # cube = generate_faces()
-    # solved = np.copy(cube)
     movement_list = ['h', 'w', 'l']
     fig = plt.figure()
     fig_2d = plt.figure()
