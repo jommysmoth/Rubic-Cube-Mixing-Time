@@ -139,16 +139,16 @@ if __name__ == '__main__':
     ax_2d = fig_2d.add_subplot(111)
     n_iter = 20
     averages = 1000
-    overflow_amount = 30
-    average_list = [10, 100]
+    overflow_amount = 1000
+    average_list = [100, 1000]
     for averages in average_list:
         solve_list, ind_list = find_sovled(n_iter, averages, overflow_amount, movement_list)
         solve_list = [x / averages for x in solve_list]
         solve_list_2d, ind_list_2d = find_sovled(n_iter, averages, overflow_amount, ['h', 'w'])
         solve_list_2d = [x / averages for x in solve_list_2d]
-        if averages == 10:
+        if averages == average_list[0]:
             col = 'go-'
-        if averages == 100:
+        if averages == average_list[1]:
             col = 'bo-'
         ax.plot(ind_list, solve_list, col)
         ax_2d.plot(ind_list_2d, solve_list_2d, col)
