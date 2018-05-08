@@ -5,6 +5,7 @@ Starting basic rubic cube movement
 """
 import numpy as np
 import matplotlib.pyplot as plt
+import collections
 
 
 def generate_faces(rand=None):
@@ -129,7 +130,9 @@ def find_sovled(number_shuffle, average_amount, overflow_amount, movement_list):
         solve_list.append(solve_fin)
     return solve_list, ind_list
 
-if __name__ == '__main__':
+
+def plot_main():
+    """Main Basic."""
     movement_list = ['h', 'w', 'l']
     fig = plt.figure()
     fig_2d = plt.figure()
@@ -162,4 +165,30 @@ if __name__ == '__main__':
     ax_2d.set_ylabel('Amount of times reaches starting state (Normalized)')
     ax.legend(average_list)
     ax_2d.legend(average_list)
+    plt.show()
+
+if __name__ == '__main__':
+    amount_random = 1
+    make_dist = 10000
+    rub_list = []
+    values = []
+    for new in range(make_dist):
+        random_faces = randomize_cube(generate_faces(), amount_random, ['h', 'w', 'l'])
+        if any((random_faces == x).all() for x in rub_list):
+            for ind, check in enumerate(rub_list):
+                if np.array_equal(check, random_faces):
+                    val = ind
+        else:
+            rub_list.append(random_faces)
+            val = len(rub_list)
+        values.append(val)
+    count = collections.Counter(values).most_common()
+
+    labels, values_hist = zip(*sorted(count))
+
+    indexes = np.arange(len(labels))
+    values_hist = [x - 1 for x in values_hist]
+    width = 1
+
+    plt.bar(indexes, sorted(values_hist, reverse=True), width)
     plt.show()
