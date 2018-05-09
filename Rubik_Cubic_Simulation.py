@@ -205,15 +205,18 @@ def make_dist_func(amount_rand, amount_dist, dim=['h', 'w', 'l']):
 
 
 if __name__ == '__main__':
-    amount_random = 15
+    amount_random = 10
     make_dist = 10000
     
-    dim = ['h', 'w']
+    prob_change = []
     for run in range(amount_random):
-        total_rep_prob = make_dist_func(run, make_dist, dim)
+        total_rep_prob = make_dist_func(run, make_dist)
+        prob_change.append(total_rep_prob)
 
-        print('2d Random Walk %i times: The total probability of a duplicate cube is %1.8f' % (run, total_rep_prob))
+        print('3d Random Walk %i times: The total probability of a duplicate cube is %1.8f' % (run, total_rep_prob))
 
-
+    plt.figure()
+    plt.plot(prob_change)
+    plt.title('Probability of Repeating State After Certain Amount of Randimization')
     plt.show()
     
