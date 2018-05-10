@@ -86,13 +86,13 @@ def turn_cube_func(faces, turn_type, turn_axis, rotate_amount):
     return faces
 
 
-def randomize_cube(cube, amount_shuffle, movement_list):
+def randomize_cube(cube, amount_shuffle, movement_list, rest_axis=3, rest_turns=3):
     """Randomize Cube x-amount."""
     size = len(movement_list)
     for x in range(amount_shuffle):
         m_type = movement_list[np.random.randint(size)]
-        axis = np.random.randint(size)
-        movement_amount = np.random.randint(size)
+        axis = np.random.randint(rest_axis)
+        movement_amount = np.random.randint(rest_turns)
         cube = turn_cube_func(cube, m_type, axis, movement_amount)
     return cube
 
@@ -175,7 +175,7 @@ def make_dist_func(amount_rand, amount_dist, dim=['h', 'w', 'l']):
     if amount_rand == 0:
         return 1
     for new in range(amount_dist):
-        random_faces = randomize_cube(generate_faces(), amount_rand, dim)
+        random_faces = randomize_cube(generate_faces(), amount_rand, dim, rest_axis=1)
         if any((random_faces == x).all() for x in rub_list):
             for ind, check in enumerate(rub_list):
                 if np.array_equal(check, random_faces):
@@ -194,8 +194,8 @@ def make_dist_func(amount_rand, amount_dist, dim=['h', 'w', 'l']):
     values_hist = sorted(values_hist, reverse=True)
     values_hist = [x - 1 for x in values_hist]
     
-    plt.figure()
-    plt.bar(indexes, values_hist, width)
+    # plt.figure()
+    # plt.bar(indexes, values_hist, width)
     plt.title('%i Total Randimized By Random Walk Length %i' % (amount_dist, amount_rand))
     
     sum_rep = sum(values_hist)
@@ -205,18 +205,21 @@ def make_dist_func(amount_rand, amount_dist, dim=['h', 'w', 'l']):
 
 
 if __name__ == '__main__':
-    amount_random = 10
+    # amount_random = 20
     make_dist = 10000
     
     prob_change = []
-    for run in range(amount_random):
-        total_rep_prob = make_dist_func(run, make_dist)
+    total_rep_prob = 10
+    run = 0
+    while total_rep_prob > 0.01:
+        total_rep_prob = make_dist_func(run, make_dist, dim=['h', 'w'])
         prob_change.append(total_rep_prob)
-
-        print('3d Random Walk %i times: The total probability of a duplicate cube is %1.8f' % (run, total_rep_prob))
+        run += 1
+        print('2d Random Walk (With only 1 of 3 on each axis) %i times: The total probability of a duplicate cube is %1.8f' % (run, total_rep_prob))
 
     plt.figure()
     plt.plot(prob_change)
     plt.title('Probability of Repeating State After Certain Amount of Randimization')
+    print(prob_change)
     plt.show()
     
